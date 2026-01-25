@@ -64,19 +64,30 @@ function showAnime(animeList) {
     });
 }
 
-// 5. Modal Logic (Only works if you have the Modal HTML)
+// 5. Modal Logic (Show Details)
 function openModal(anime) {
-    // Only try to populate if the elements exist
+    const modal = document.getElementById('anime-modal');
     const modalTitle = document.getElementById('modal-title');
-    if (!modalTitle) return; // Stop if modal HTML is missing
-
-    modalTitle.innerText = title;
-    document.getElementById('modal-img').src = images.jpg.large_image_url;
-    document.getElementById('modal-synopsis').innerText = synopsis || "No description available.";
     
-    // Show the modal
+    // Safety check: Does the modal exist in HTML?
+    if (!modal || !modalTitle) {
+        console.error("Modal HTML elements not found!"); 
+        return; 
+    }
+
+    // FILL IN THE INFO
+    modalTitle.innerText = anime.title; // Fixed: added 'anime.'
+    
+    const img = document.getElementById('modal-img');
+    if (img) img.src = anime.images.jpg.large_image_url;
+
+    const synopsis = document.getElementById('modal-synopsis');
+    if (synopsis) synopsis.innerText = anime.synopsis || "No description available.";
+
+    // SHOW THE MODAL
     modal.style.display = 'flex';
 }
+
 
 // Close Modal Logic
 if (closeBtn) {
