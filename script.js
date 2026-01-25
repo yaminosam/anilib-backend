@@ -64,4 +64,17 @@ async function saveToFavorites(title, image) {
 // Allow pressing "Enter" key to search
 document.getElementById('search-input').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') searchAnime();
+    // 4. Load Top Anime Automatically
+async function getTopAnime() {
+    try {
+        const response = await fetch(`${API_URL}/top`);
+        const data = await response.json();
+        displayAnime(data.data); // Show the results
+    } catch (error) {
+        console.error("Error getting top anime:", error);
+    }
+}
+
+// Run this function immediately when the page loads
+getTopAnime();
 });
