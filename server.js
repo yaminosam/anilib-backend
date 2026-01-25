@@ -1,5 +1,4 @@
 // server.js
-require('.env').config();
 
 const express = require('express');
 const axios = require('axios');
