@@ -1,97 +1,67 @@
-// script.js
-// We point this to YOUR backend now!
-const API_URL = " https://anilib-9ikc.onrender.com/api";
-const grid = document.getElementById('anime-grid');
-const searchBtn = document.getElementById('search-btn');
-const searchInput = document.getElementById('search-input');
-const modal = document.getElementById('anime-modal');
-const closeBtn = document.querySelector('.close-btn');
+// LINK TO YOUR RENDER BACKEND
+const API_URL = "https://anilib-9ikc.onrender.com/api"; 
 
-// 1. Fetch Top Anime on Load
-window.addEventListener('load', () => {
-    // OLD: getAnime(`${API_URL}/top/anime`);
-    // NEW:
-    getAnime(`${API_URL}/top`);
-});
+// 1. Search Anime Function
+async function searchAnime() {
+    const query = document.getElementById('search-input').value;
+    if (!query) return;
 
-// 2. Search Functionality
-searchBtn.addEventListener('click', () => {
-    const query = searchInput.value;
-    if(query) {
-        document.getElementById('section-title').innerText = `Search Results for "${query}"`;
-        // OLD: getAnime(`${API_URL}/anime?q=${query}&sfw`);
-        // NEW:
-        getAnime(`${API_URL}/search?q=${query}`);
-    }
-});
-
-// 3. Fetch Data from API
-async function getAnime(url) {
-    grid.innerHTML = '<p>Loading...</p>';
     try {
-        const res = await fetch(url);
-        const data = await res.json();
-        showAnime(data.data);
+        // Fetch data from YOUR backend (which talks to Jikan API)
+        const response = await fetch(`${API_URL}/search?q=${query}`);
+        const data = await response.json();
+        
+        displayAnime(data.data); // Show the results
     } catch (error) {
-        grid.innerHTML = '<p>Error fetching data. Please try again.</p>';
-        console.error(error);
+        console.error("Error searching:", error);
+        alert("Something went wrong. Check the console!");
     }
 }
 
-// 4. Render Anime Cards
-function showAnime(animeList) {
-    grid.innerHTML = '';
-    
+// 2. Display Cards (Now with a SAVE button!)
+function displayAnime(animeList) {
+    const list = document.getElementById('anime-list');
+    list.innerHTML = ''; // Clear old results
+
     animeList.forEach(anime => {
-        const { title, images, score, mal_id } = anime;
-        
-        const animeEl = document.createElement('div');
-        animeEl.classList.add('card');
-        
-        animeEl.innerHTML = `
-            <img src="${images.jpg.large_image_url}" alt="${title}">
-            <div class="card-score">${score || 'N/A'}</div>
-            <div class="card-content">
-                <h3 class="card-title">${title}</h3>
-            </div>
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+
+        // We use backticks (`) to create the HTML card
+        card.innerHTML = `
+            <img src="${anime.images.jpg.image_url}" alt="Anime Cover">
+            <h3>${anime.title}</h3>
+            <button onclick="saveToFavorites('${anime.title}', '${anime.images.jpg.image_url}')">
+                ❤️ Save to List
+            </button>
         `;
-        
-        // Add click event to open details
-        animeEl.addEventListener('click', () => openModal(anime));
-        
-        grid.appendChild(animeEl);
+        list.appendChild(card);
     });
 }
 
-// 5. Modal Logic (Show Details)
-function openModal(anime) {
-    document.getElementById('modal-title').innerText = anime.title;
-    document.getElementById('modal-img').src = anime.images.jpg.large_image_url;
-    document.getElementById('modal-synopsis').innerText = anime.synopsis || "No description available.";
-    document.getElementById('modal-rating').innerText = anime.score;
-    document.getElementById('modal-episodes').innerText = anime.episodes || "Unknown";
-    document.getElementById('modal-status').innerText = anime.status;
-    document.getElementById('modal-link').href = anime.url;
-    
-    // Genres
-    const tagsContainer = document.getElementById('modal-tags');
-    tagsContainer.innerHTML = '';
-    anime.genres.forEach(genre => {
-        const tag = document.createElement('span');
-        tag.innerText = genre.name;
-        tagsContainer.appendChild(tag);
-    });
+// 3. The "Save" Function (Talks to Database)
+async function saveToFavorites(title, image) {
+    // Prevent errors with special characters in titles
+    const safeTitle = title.replace(/'/g, ""); 
 
-    modal.style.display = 'flex';
-}
+    try {
+        const response = await fetch(`${API_URL}/favorites`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: safeTitle, image: image })
+        });
 
-// Close Modal
-closeBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-});
-
-window.addEventListener('click', (e) => {
-    if (e.target == modal) {
-        modal.style.display = 'none';
+        if (response.ok) {
+            alert(`Saved: ${safeTitle}! ✅`);
+        } else {
+            alert("Error saving anime ❌");
+        }
+    } catch (error) {
+        console.error("Error saving:", error);
     }
+}
+
+// Allow pressing "Enter" key to search
+document.getElementById('search-input').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') searchAnime();
 });
