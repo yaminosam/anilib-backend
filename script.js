@@ -1,6 +1,6 @@
 // script.js
 // We point this to YOUR backend now!
-const API_URL = "http://localhost:5000/api";
+const API_URL = " https://anilib-9ikc.onrender.com";
 const grid = document.getElementById('anime-grid');
 const searchBtn = document.getElementById('search-btn');
 const searchInput = document.getElementById('search-input');
