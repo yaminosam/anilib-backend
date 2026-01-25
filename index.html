@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+:root {
+    --primary: #ff6b6b;
+    --dark-bg: #1a1a2e;
+    --card-bg: #16213e;
+    --text-main: #ffffff;
+    --text-sec: #b2b2b2;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #0f3460;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--text-main);
+}
+
+.logo span { color: var(--primary); }
+
+.search-container {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    width: 250px;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover { background-color: #ff5252; }
+
+/* Main Grid */
+main { padding: 2rem; }
+
+h2 { margin-bottom: 1.5rem; border-left: 5px solid var(--primary); padding-left: 10px; }
+
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+/* Anime Card */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.card:hover { transform: translateY(-5px); }
+
+.card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.card-content { padding: 1rem; }
+
+.card-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-score {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* Modal */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 200; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.8); 
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    position: relative;
+}
+
+.modal-body { display: flex; gap: 20px; }
+.modal-body img { width: 300px; border-radius: 10px; }
+.modal-info { flex: 1; }
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.tags span {
+    background: #0f3460;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
+
+.watch-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+    .modal-body { flex-direction: column; }
+    .modal-body img { width: 100%; max-height: 400px; object-fit: cover; }
+}
+</style>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniLib - Your Anime Collection</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">Ani<span>Lib</span></div>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search for anime (e.g. Naruto)...">
+            <button id="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <main>
+        <h2 id="section-title">Top Airing Anime</h2>
+        <div class="anime-grid" id="anime-grid">
+            </div>
+    </main>
+
+    <div id="anime-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-body">
+                <img id="modal-img" src="" alt="Anime Cover">
+                <div class="modal-info">
+                    <h2 id="modal-title">Anime Title</h2>
+                    <div class="tags" id="modal-tags">
+                        </div>
+                    <p id="modal-synopsis">Synopsis goes here...</p>
+                    <div class="stats">
+                        <p><strong>Rating:</strong> <span id="modal-rating"></span></p>
+                        <p><strong>Episodes:</strong> <span id="modal-episodes"></span></p>
+                        <p><strong>Status:</strong> <span id="modal-status"></span></p>
+                    </div>
+                    <a href="#" id="modal-link" target="_blank" class="watch-btn">View on MAL</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+</head>
+<body></body>
+<script src="first.js"> </script> 
+
+</html>
