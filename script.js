@@ -14,13 +14,31 @@ window.addEventListener('load', () => {
 });
 
 // 2. Search Functionality
-searchBtn.addEventListener('click', () => {
-    const query = searchInput.value;
-    if(query) {
-        document.getElementById('section-title').innerText = `Search Results for "${query}"`;
-        getAnime(`${API_URL}/search?q=${query}`);
+// Allow clicking the button
+searchBtn.addEventListener('click', (e) => {
+    e.preventDefault(); // STOP the page from reloading
+    performSearch();
+});
+
+// Allow pressing "Enter" key
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // STOP the page from reloading
+        performSearch();
     }
 });
+
+// The actual search logic (moved to a function so we don't repeat code)
+function performSearch() {
+    const query = searchInput.value;
+    if(query) {
+        // Update the title to show what we are searching for
+        const sectionTitle = document.getElementById('section-title');
+        if (sectionTitle) sectionTitle.innerText = `Search Results for "${query}"`;
+        
+        getAnime(`${API_URL}/search?q=${query}`);
+    }
+}
 
 // 3. Fetch Data from API
 async function getAnime(url) {
