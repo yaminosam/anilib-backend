@@ -103,3 +103,27 @@ a.anime-card {
 .watch-btn:hover {
     background-color: #d4631b; /* Darker Orange on hover */
 }
+/* Fix for the Modal Scrollbar */
+.modal-content {
+    background-color: #1f1f1f;
+    margin: 5% auto; /* Center it with 5% space from top */
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;       /* Use 90% of screen width on mobile */
+    max-width: 800px; /* But don't get wider than 800px on PC */
+    
+    /* 👇 THESE ARE THE IMPORTANT LINES 👇 */
+    max-height: 85vh; /* Never get taller than 85% of the screen */
+    overflow-y: auto; /* Enable scrolling inside the box */
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5); /* Nice shadow */
+}
+
+/* Optional: Make the image smaller so it doesn't take all the space */
+#modal-img {
+    width: 100%;
+    max-height: 300px; /* Limit image height */
+    object-fit: contain; /* Keep image looking good */
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
