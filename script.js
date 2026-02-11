@@ -1,63 +1,69 @@
-// FIXED: Removed the space at the start of the URL
 const API_URL = "https://anilib-9ikc.onrender.com/api";
-
-// FIXED: Changed 'anime-grid' to 'anime-list' to match your CSS
+// We use 'anime-list' to match your CSS. 
+// If this is null, the code will alert you!
 const grid = document.getElementById('anime-list');
 const searchBtn = document.getElementById('search-btn');
 const searchInput = document.getElementById('search-input');
-const modal = document.getElementById('anime-modal');
-const closeBtn = document.querySelector('.close-btn');
 
 // 1. Fetch Top Anime on Load
 window.addEventListener('load', () => {
+    if (!grid) {
+        console.error("ERROR: Could not find <div id='anime-list'> in HTML!");
+        return;
+    }
     getAnime(`${API_URL}/top`);
 });
 
 // 2. Search Functionality
-// Allow clicking the button
-searchBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // STOP the page from reloading
-    performSearch();
-});
-
-// Allow pressing "Enter" key
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault(); // STOP the page from reloading
+if (searchBtn) {
+    searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         performSearch();
-    }
-});
+    });
+}
 
-// The actual search logic (moved to a function so we don't repeat code)
+if (searchInput) {
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            performSearch();
+        }
+    });
+}
+
 function performSearch() {
     const query = searchInput.value;
     if(query) {
-        // Update the title to show what we are searching for
         const sectionTitle = document.getElementById('section-title');
         if (sectionTitle) sectionTitle.innerText = `Search Results for "${query}"`;
-        
         getAnime(`${API_URL}/search?q=${query}`);
     }
 }
 
-// 3. Fetch Data from API
+// 3. Fetch Data
 async function getAnime(url) {
-    grid.innerHTML = '<p>Loading...</p>';
+    if (!grid) return;
+    grid.innerHTML = '<p style="color:white;">Loading...</p>';
     try {
         const res = await fetch(url);
         const data = await res.json();
         showAnime(data.data);
     } catch (error) {
-        grid.innerHTML = '<p>Error fetching data. Please try again.</p>';
+        grid.innerHTML = '<p style="color:red;">Error fetching data. Check Console.</p>';
         console.error(error);
     }
 }
 
-// 4. Render Anime Cards (Click opens Modal)
+// 4. Render Cards (Safety Version)
 function showAnime(animeList) {
-    const grid = document.getElementById('anime-list');
+    if (!grid) return;
     grid.innerHTML = '';
     
+    if (!animeList || animeList.length === 0) {
+        grid.innerHTML = '<p>No results found.</p>';
+        return;
+    }
+
     animeList.forEach(anime => {
         const { title, images, score } = anime;
         
@@ -72,38 +78,49 @@ function showAnime(animeList) {
             </div>
         `;
         
-        // CLICKING CARD OPENS MODAL
+        // Add click listener safely
         animeEl.addEventListener('click', () => openModal(anime));
         
         grid.appendChild(animeEl);
     });
 }
 
-// 5. Modal Logic (With Watch Link!)
+// 5. Open Modal (Safety Version)
 function openModal(anime) {
     const modal = document.getElementById('anime-modal');
-    
-    // Fill in the details
-    document.getElementById('modal-title').innerText = anime.title;
-    document.getElementById('modal-img').src = anime.images.jpg.large_image_url;
-    document.getElementById('modal-synopsis').innerText = anime.synopsis || "No description available.";
-    
-    // 👇 UPDATE THE WATCH BUTTON LINK 👇
+    if (!modal) {
+        // Fallback if modal is missing: Just open Crunchyroll directly
+        window.open(`https://www.crunchyroll.com/search?q=${anime.title}`, '_blank');
+        return;
+    }
+
+    const titleEl = document.getElementById('modal-title');
+    const imgEl = document.getElementById('modal-img');
+    const descEl = document.getElementById('modal-synopsis');
     const watchLink = document.getElementById('modal-watch-link');
-    // Create a smart search link for Crunchyroll
-    watchLink.href = `https://www.crunchyroll.com/search?q=${anime.title}`;
+
+    // Fill data only if elements exist
+    if (titleEl) titleEl.innerText = anime.title;
+    if (imgEl) imgEl.src = anime.images.jpg.large_image_url;
+    if (descEl) descEl.innerText = anime.synopsis || "No description available.";
     
-    // Show the modal
+    // Update Watch Button
+    if (watchLink) {
+        watchLink.href = `https://www.crunchyroll.com/search?q=${anime.title}`;
+    }
+
     modal.style.display = 'flex';
 }
 
-// Close Modal Logic (Keep this from before)
+// Close Modal Logic
 const closeBtn = document.querySelector('.close-btn');
 if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-        document.getElementById('anime-modal').style.display = 'none';
+        const modal = document.getElementById('anime-modal');
+        if(modal) modal.style.display = 'none';
     });
 }
+
 window.addEventListener('click', (e) => {
     const modal = document.getElementById('anime-modal');
     if (e.target == modal) {
