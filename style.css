@@ -87,3 +87,19 @@ a.anime-card {
     color: inherit;        /* Keeps your white text color */
     display: block;        /* Makes it a box, not just text */
 }
+/* The Watch Button inside the Modal */
+.watch-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #f47521; /* Crunchyroll Orange */
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.watch-btn:hover {
+    background-color: #d4631b; /* Darker Orange on hover */
+}

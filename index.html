@@ -207,28 +207,21 @@ h2 { margin-bottom: 1.5rem; border-left: 5px solid var(--primary); padding-left:
     </main>
 
     <div id="anime-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <div class="modal-body">
-                <img id="modal-img" src="" alt="Anime Cover">
-                <div class="modal-info">
-                    <h2 id="modal-title">Anime Title</h2>
-                    <div class="tags" id="modal-tags">
-                        </div>
-                    <p id="modal-synopsis">Synopsis goes here...</p>
-                    <div class="stats">
-                        <p><strong>Rating:</strong> <span id="modal-rating"></span></p>
-                        <p><strong>Episodes:</strong> <span id="modal-episodes"></span></p>
-                        <p><strong>Status:</strong> <span id="modal-status"></span></p>
-                    </div>
-                    <a href="#" id="modal-link" target="_blank" class="watch-btn">View on MAL</a>
-                    <a id="modal-link" href="#" target="_blank" style="display: inline-block; margin-top: 15px; padding: 10px 20px; background-color: #F47521; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-    ▶️ Watch on Crunchyroll
-</a>
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div class="modal-info">
+            <img id="modal-img" src="" alt="Anime Image">
+            <div class="modal-text">
+                <h2 id="modal-title">Anime Title</h2>
+                <p id="modal-synopsis">Description goes here...</p>
+                
+                <a id="modal-watch-link" href="#" target="_blank" class="watch-btn">
+                    ▶ Watch on Crunchyroll
+                </a>
                 </div>
-            </div>
         </div>
     </div>
+</div>
 
     <script src="script.js"></script>
 </body>

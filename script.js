@@ -53,77 +53,59 @@ async function getAnime(url) {
     }
 }
 
-// 4. Render Anime Cards (The "Link" Version)
+// 4. Render Anime Cards (Click opens Modal)
 function showAnime(animeList) {
     const grid = document.getElementById('anime-list');
     grid.innerHTML = '';
     
     animeList.forEach(anime => {
-        const title = anime.title;
-        const image = anime.images.jpg.large_image_url;
-        const score = anime.score;
+        const { title, images, score } = anime;
         
-        // CREATE A LINK (<a>) INSTEAD OF A DIV
-        const animeEl = document.createElement('a');
+        const animeEl = document.createElement('div');
         animeEl.classList.add('anime-card');
         
-        // This tells the browser: "Go to this URL when clicked"
-        animeEl.href = `https://www.crunchyroll.com/search?q=${title}`;
-        animeEl.target = "_blank"; // Opens in a new tab
-        
         animeEl.innerHTML = `
-            <img src="${image}" alt="${title}">
+            <img src="${images.jpg.large_image_url}" alt="${title}">
             <div class="card-content">
                 <h3 class="card-title">${title}</h3>
                 <p style="color: #bbb; font-size: 0.9rem;">⭐ ${score || 'N/A'}</p>
             </div>
         `;
         
+        // CLICKING CARD OPENS MODAL
+        animeEl.addEventListener('click', () => openModal(anime));
+        
         grid.appendChild(animeEl);
     });
 }
-// 5. Modal Logic (Show Details)
+
+// 5. Modal Logic (With Watch Link!)
 function openModal(anime) {
     const modal = document.getElementById('anime-modal');
-    const modalTitle = document.getElementById('modal-title');
-    // --- THE CRUNCHYROLL TRICK ---
-    const watchLink = document.getElementById('modal-link');
-    if (watchLink) {
-        // encodeURIComponent makes sure spaces in titles (like "One Piece") become safe web links (like "One%20Piece")
-        const safeTitle = encodeURIComponent(anime.title);
-        
-        // Build the Crunchyroll search URL
-        watchLink.href = `https://www.crunchyroll.com/search?q=${safeTitle}`;
-    }
     
-    // Safety check: Does the modal exist in HTML?
-    if (!modal || !modalTitle) {
-        console.error("Modal HTML elements not found!"); 
-        return; 
-    }
-
-    // FILL IN THE INFO
-    modalTitle.innerText = anime.title; // Fixed: added 'anime.'
+    // Fill in the details
+    document.getElementById('modal-title').innerText = anime.title;
+    document.getElementById('modal-img').src = anime.images.jpg.large_image_url;
+    document.getElementById('modal-synopsis').innerText = anime.synopsis || "No description available.";
     
-    const img = document.getElementById('modal-img');
-    if (img) img.src = anime.images.jpg.large_image_url;
-
-    const synopsis = document.getElementById('modal-synopsis');
-    if (synopsis) synopsis.innerText = anime.synopsis || "No description available.";
-
-    // SHOW THE MODAL
+    // 👇 UPDATE THE WATCH BUTTON LINK 👇
+    const watchLink = document.getElementById('modal-watch-link');
+    // Create a smart search link for Crunchyroll
+    watchLink.href = `https://www.crunchyroll.com/search?q=${anime.title}`;
+    
+    // Show the modal
     modal.style.display = 'flex';
 }
 
-
-// Close Modal Logic
+// Close Modal Logic (Keep this from before)
+const closeBtn = document.querySelector('.close-btn');
 if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
+        document.getElementById('anime-modal').style.display = 'none';
     });
 }
-
 window.addEventListener('click', (e) => {
+    const modal = document.getElementById('anime-modal');
     if (e.target == modal) {
         modal.style.display = 'none';
     }
