@@ -86,6 +86,15 @@ function showAnime(animeList) {
 function openModal(anime) {
     const modal = document.getElementById('anime-modal');
     const modalTitle = document.getElementById('modal-title');
+    // --- THE CRUNCHYROLL TRICK ---
+    const watchLink = document.getElementById('modal-link');
+    if (watchLink) {
+        // encodeURIComponent makes sure spaces in titles (like "One Piece") become safe web links (like "One%20Piece")
+        const safeTitle = encodeURIComponent(anime.title);
+        
+        // Build the Crunchyroll search URL
+        watchLink.href = `https://www.crunchyroll.com/search?q=${safeTitle}`;
+    }
     
     // Safety check: Does the modal exist in HTML?
     if (!modal || !modalTitle) {
