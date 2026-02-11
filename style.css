@@ -81,3 +81,9 @@ button:hover {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* Make the link look like a normal card */
+a.anime-card {
+    text-decoration: none; /* Removes the underline */
+    color: inherit;        /* Keeps your white text color */
+    display: block;        /* Makes it a box, not just text */
+}

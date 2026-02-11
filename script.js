@@ -53,35 +53,35 @@ async function getAnime(url) {
     }
 }
 
-// 4. Render Anime Cards
+// 4. Render Anime Cards (The "Link" Version)
 function showAnime(animeList) {
+    const grid = document.getElementById('anime-list');
     grid.innerHTML = '';
     
     animeList.forEach(anime => {
-        const { title, images, score, mal_id } = anime;
+        const title = anime.title;
+        const image = anime.images.jpg.large_image_url;
+        const score = anime.score;
         
-        const animeEl = document.createElement('div');
-        // FIXED: Changed 'card' to 'anime-card' so your CSS styling works
+        // CREATE A LINK (<a>) INSTEAD OF A DIV
+        const animeEl = document.createElement('a');
         animeEl.classList.add('anime-card');
         
+        // This tells the browser: "Go to this URL when clicked"
+        animeEl.href = `https://www.crunchyroll.com/search?q=${title}`;
+        animeEl.target = "_blank"; // Opens in a new tab
+        
         animeEl.innerHTML = `
-            <img src="${images.jpg.large_image_url}" alt="${title}">
+            <img src="${image}" alt="${title}">
             <div class="card-content">
                 <h3 class="card-title">${title}</h3>
                 <p style="color: #bbb; font-size: 0.9rem;">⭐ ${score || 'N/A'}</p>
             </div>
         `;
         
-        // Add click event to open details
-        // Note: Ensure your HTML has a modal div for this to work!
-        if(typeof openModal === "function") {
-             animeEl.addEventListener('click', () => openModal(anime));
-        }
-        
         grid.appendChild(animeEl);
     });
 }
-
 // 5. Modal Logic (Show Details)
 function openModal(anime) {
     const modal = document.getElementById('anime-modal');
