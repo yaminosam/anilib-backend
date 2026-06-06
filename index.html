@@ -1,233 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniLib</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-:root {
-    --primary: #ff6b6b;
-    --dark-bg: #1a1a2e;
-    --card-bg: #16213e;
-    --text-main: #ffffff;
-    --text-sec: #b2b2b2;
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background-color: var(--dark-bg);
-    color: var(--text-main);
-}
-
-/* Header */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #0f3460;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.logo {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--text-main);
-}
-
-.logo span { color: var(--primary); }
-
-.search-container {
-    display: flex;
-    gap: 10px;
-}
-
-input {
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    width: 250px;
-}
-
-button {
-    padding: 0.5rem 1rem;
-    background-color: var(--primary);
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover { background-color: #ff5252; }
-
-/* Main Grid */
-main { padding: 2rem; }
-
-h2 { margin-bottom: 1.5rem; border-left: 5px solid var(--primary); padding-left: 10px; }
-
-.anime-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 2rem;
-}
-
-/* Anime Card */
-.card {
-    background-color: var(--card-bg);
-    border-radius: 10px;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-    position: relative;
-}
-
-.card:hover { transform: translateY(-5px); }
-
-.card img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-}
-
-.card-content { padding: 1rem; }
-
-.card-title {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.card-score {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--primary);
-    padding: 2px 8px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-/* Modal */
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 200; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0,0,0,0.8); 
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background-color: var(--card-bg);
-    padding: 20px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 800px;
-    position: relative;
-}
-
-.modal-body { display: flex; gap: 20px; }
-.modal-body img { width: 300px; border-radius: 10px; }
-.modal-info { flex: 1; }
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 2rem;
-    cursor: pointer;
-}
-
-.tags span {
-    background: #0f3460;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    margin-right: 5px;
-}
-
-.watch-btn {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: var(--primary);
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-/* Responsive Modal */
-@media (max-width: 768px) {
-    .modal-body { flex-direction: column; }
-    .modal-body img { width: 100%; max-height: 400px; object-fit: cover; }
-}
-</style>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="AniLib - Browse top anime, search your favorite series, and manage your watchlist.">
     <title>AniLib - Your Anime Collection</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS File -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
 
-    <header>
-        <div class="logo">Ani<span>Lib</span></div>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search for anime (e.g. Naruto)...">
-            <button id="search-btn"><i class="fas fa-search"></i></button>
+<body>
+    <!-- Top Glassmorphic Navigation -->
+    <header class="app-header">
+        <div class="logo">
+            <i class="fas fa-film logo-icon"></i> Ani<span>Lib</span>
+        </div>
+        <nav class="nav-tabs">
+            <button class="tab-btn active" id="tab-discover" data-tab="discover">
+                <i class="fas fa-compass"></i> Discover
+            </button>
+            <button class="tab-btn" id="tab-watchlist" data-tab="watchlist">
+                <i class="fas fa-heart"></i> Watchlist
+            </button>
+        </nav>
+        <div class="search-wrapper">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search anime (e.g. Naruto)..." autocomplete="off">
+                <button id="search-clear-btn" class="clear-btn" aria-label="Clear search"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            <button id="search-btn">Search</button>
         </div>
     </header>
 
-    <main>
-        <h2 id="section-title">Top Airing Anime</h2>
-        <div class="anime-grid" id="anime-list">
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- Watchlist Filters Bar (Hidden by default, shown on Watchlist tab) -->
+        <div class="watchlist-filters-bar" id="watchlist-filters" style="display: none;">
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">All Anime</button>
+                <button class="filter-btn" data-filter="plan"><i class="far fa-bookmark"></i> Plan to Watch</button>
+                <button class="filter-btn" data-filter="completed"><i class="fas fa-check-circle"></i>
+                    Completed</button>
             </div>
+            <div class="watchlist-stats">
+                Saved: <span id="watchlist-count">0</span>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2 id="section-title">Trending Anime</h2>
+            <div class="accent-line"></div>
+        </div>
+
+        <!-- Anime Grid -->
+        <div class="anime-grid" id="anime-list">
+            <!-- Skeleton cards or dynamic content loaded here -->
+        </div>
     </main>
 
-    <div id="anime-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <div class="modal-info">
-            <img id="modal-img" src="" alt="Anime Image">
-            <div class="modal-text">
-                <h2 id="modal-title">Anime Title</h2>
-                <p id="modal-synopsis">Description goes here...</p>
-                
-                <a id="modal-watch-link" href="#" target="_blank" class="watch-btn">
-                    ▶ Watch on Crunchyroll
-                </a>
+    <!-- Detail Modal -->
+    <div id="anime-modal" class="modal-overlay">
+        <div class="modal-window">
+            <button class="close-btn" aria-label="Close modal">&times;</button>
+            <div class="modal-layout">
+                <div class="modal-sidebar">
+                    <div class="modal-image-container">
+                        <img id="modal-img" src="" alt="Anime Poster">
+                        <div class="modal-image-overlay">
+                            <span id="modal-score"><i class="fas fa-star"></i> 8.5</span>
+                        </div>
+                    </div>
+                    <div class="modal-sidebar-actions">
+                        <button id="modal-watchlist-btn" class="btn btn-primary btn-block">
+                            <i class="fas fa-plus"></i> Add to Watchlist
+                        </button>
+                        <div id="modal-status-toggle" class="status-selector" style="display: none;">
+                            <span class="status-label">Watch Status:</span>
+                            <div class="status-options">
+                                <button class="status-option-btn" id="status-btn-plan" data-status="plan">Plan to
+                                    Watch</button>
+                                <button class="status-option-btn" id="status-btn-completed"
+                                    data-status="completed">Completed</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="modal-info-panel">
+                    <h2 id="modal-title">Anime Title</h2>
+                    <div class="modal-metadata">
+                        <span id="modal-type" class="meta-badge">TV</span>
+                        <span id="modal-episodes" class="meta-badge">24 Episodes</span>
+                        <span id="modal-status" class="meta-badge">Finished Airing</span>
+                    </div>
+                    <div id="modal-genres" class="genres-list">
+                        <!-- Genres list dynamically populated -->
+                    </div>
+                    <div class="synopsis-section">
+                        <h3>Synopsis</h3>
+                        <p id="modal-synopsis">Detailed anime synopsis goes here...</p>
+                    </div>
+                    <div class="modal-footer-actions">
+                        <a id="modal-watch-link" href="#" target="_blank" class="watch-link-btn">
+                            <i class="fas fa-play"></i> Watch on Crunchyroll
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- JavaScript File -->
     <script src="script.js"></script>
 </body>
-</html>
-</head>
-<body></body>
-<script src="first.js"> </script> 
 
 </html>
